@@ -1,0 +1,3 @@
+---
+# vars file for ansible-role-minishift
+minishift_brew_prefix: /usr/local

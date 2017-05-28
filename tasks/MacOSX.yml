@@ -1,0 +1,24 @@
+---
+# tasks file for ansible-role-minishift
+
+- name: install Docker Machine driver
+  homebrew:
+    name: docker-machine-driver-xhyve
+    state: head
+
+- name: install hypervisor
+  homebrew:
+    name: xhyve
+    state: head
+
+- name: install minishift
+  homebrew_cask:
+    name: minishift
+    state: present
+
+- name: Set docker-machine-driver-xhyve with root owner and uid
+  file:
+    path: "{{ minishift_brew_prefix }}/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve"
+    owner: root
+    group: wheel
+    mode: u+s

@@ -1,0 +1,59 @@
+---
+# tasks file for ansible-role-minishift
+
+- name: install Docker Machine driver
+  get_url:
+    url: '{{ minishift_kvm_driver_url }}'
+    dest: '{{ minishift_path_prefix }}/docker-machine-driver-kvm'
+    mode: '{{ minishift_mode_exec }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ minishift_group }}'
+    checksum: 'md5:{{ minishift_kvm_driver_checksum }}'
+
+- name: install hypervisor
+  dnf:
+    name: '{{ item }}'
+    state: latest
+  with_items: '{{ minishift_requisite_packages }}'
+  notify: restart libvirtd
+
+- name: add user to {{ minishift_group }} group
+  user:
+    name: '{{ ansible_user }}'
+    groups: '{{ minishift_group }}'
+    append: true
+
+- name: change current group ID during login session
+  command: newgrp {{ minishift_group }}
+
+- name: Get tarball for minishift
+  get_url:
+    url: '{{ minishift_url }}'
+    dest: /tmp/minishift.tgz
+    checksum: 'sha256:{{ minishift_checksum }}'
+
+- name: Unarchive tarball for minishift
+  unarchive:
+    remote_src: true
+    src: /tmp/minishift.tgz
+    dest: '{{ minishift_path_prefix }}'
+    mode: '{{ minishift_mode_exec }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ minishift_group }}'
+
+- name: define default virtual network
+  virt_net:
+    command: define
+    name: '{{ minishift_network.name }}'
+    xml: '{{ lookup("template", "{{ minishift_network.name }}.xml.j2") }}'
+
+- name: create default virtual network
+  virt_net:
+    command: create
+    name: '{{ minishift_network.name }}'
+    state: active
+
+- name: enable default virtual network autostart
+  virt_net:
+    name: '{{ minishift_network.name }}'
+    autostart: true

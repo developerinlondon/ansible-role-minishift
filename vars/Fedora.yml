@@ -1,0 +1,4 @@
+---
+# vars file for ansible-role-minishift
+minishift_group: libvirt
+minishift_path_prefix: /usr/local/bin

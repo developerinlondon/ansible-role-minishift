@@ -1,0 +1,16 @@
+---
+# tasks file for ansible-role-minishift
+
+- include_vars: "{{ ansible_distribution }}.yml"
+
+- name: install Docker Machine
+  get_url:
+    url: '{{ minishift_docker_machine_url }}'
+    dest: '{{ minishift_path_prefix }}/docker-machine'
+    mode: '{{ minishift_mode_exec }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ minishift_group }}'
+    checksum: 'sha256:{{ minishift_docker_machine_checksum }}'
+
+- name: setup minishift
+  include: "{{ ansible_distribution }}.yml"

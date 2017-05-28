@@ -1,0 +1,10 @@
+<network>
+  <name>{{ minishift_network.name }}</name>
+  <bridge name="{{ minishift_network.bridge }}"/>
+  <forward/>
+  <ip address="{{ minishift_network.network }}.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="{{ minishift_network.network }}.2" end="{{ minishift_network.network }}.254"/>
+    </dhcp>
+  </ip>
+</network>
