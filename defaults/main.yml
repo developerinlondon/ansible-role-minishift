@@ -3,7 +3,7 @@
 minishift_requisite_packages:
   - libvirt
   - qemu-kvm
-minishift_group: libvirtd
+minishift_group: staff
 minishift_mode_exec: 0755
 minishift_kvm_driver_version: 0.10.0
 minishift_kvm_driver_url: 'https://github.com/dhiltgen/docker-machine-kvm/releases/download/v{{ minishift_kvm_driver_version }}/docker-machine-driver-kvm-centos7'
@@ -18,3 +18,4 @@ minishift_network:
   name: default
   bridge: virbr0
   network: 192.168.122
+minishift_path_prefix: '/opt'
